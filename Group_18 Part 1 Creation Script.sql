@@ -1,0 +1,96 @@
+USE hospital;
+
+CREATE TABLE IF NOT EXISTS Patient (
+  Patient_ID INT NOT NULL AUTO_INCREMENT,
+  Date_Of_Birth DATE NOT NULL,
+  First_Name VARCHAR(100) NOT NULL,
+  Last_Name VARCHAR(100) NOT NULL,
+  Fiscal_Number VARCHAR(9) NOT NULL UNIQUE,
+  Gender ENUM('Male', 'Female', 'Other') NOT NULL,
+  Address VARCHAR(255) NOT NULL,
+  Phone_Number VARCHAR(15) NOT NULL,
+  Email VARCHAR(100) UNIQUE,
+  Emergency_Phone_Number VARCHAR(15),
+  Emergency_Name VARCHAR(100),
+  PRIMARY KEY ( Patient_ID )
+);
+
+CREATE TABLE IF NOT EXISTS Doctors (
+  Doctor_ID INT NOT NULL AUTO_INCREMENT,
+  Date_Of_Birth DATE NOT NULL,
+  First_Name VARCHAR(100) NOT NULL,
+  Last_Name VARCHAR(100) NOT NULL,
+  Phone_Number VARCHAR(15) NOT NULL,
+  Spec_ID INT NOT NULL,
+  Years_Of_Experience INT,
+  Rating DECIMAL(10,2),
+  PRIMARY KEY ( Doctor_ID )
+);
+
+CREATE TABLE IF NOT EXISTS Hospital (
+  Hospital_ID INT NOT NULL AUTO_INCREMENT,
+  ZIP_Code VARCHAR(10) NOT NULL,
+  Address VARCHAR(255) NOT NULL,
+  City VARCHAR(100) NOT NULL,
+  Capacity INT NOT NULL,
+  PRIMARY KEY ( Hospital_ID )
+);
+
+CREATE TABLE IF NOT EXISTS Specialty (
+  Spec_ID INT NOT NULL AUTO_INCREMENT,
+  Description TEXT NOT NULL,
+  PRIMARY KEY ( Spec_ID )
+);
+
+CREATE TABLE IF NOT EXISTS HOS_SPEC_JUNC (
+  Spec_ID INT NOT NULL,
+  Hospital_ID INT NOT NULL,
+  PRIMARY KEY ( Spec_ID , Hospital_ID )
+);
+
+CREATE TABLE IF NOT EXISTS DOC_HOS_JUNC (
+  Doctor_ID INT NOT NULL,
+  Hospital_ID INT NOT NULL,
+  Start_Date DATE NOT NULL,
+  End_Date DATE,
+  PRIMARY KEY ( Doctor_ID , Hospital_ID )
+);
+
+CREATE TABLE IF NOT EXISTS Appointment (
+  App_ID INT NOT NULL AUTO_INCREMENT,
+  App_Time DATETIME NOT NULL,
+  Patient_ID INT NOT NULL,
+  Status_ID INT NOT NULL,
+  Doctor_ID INT NOT NULL,
+  Description TEXT,
+  PRIMARY KEY ( App_ID )
+);
+
+CREATE TABLE IF NOT EXISTS Appointment_Record (
+  Record_ID INT NOT NULL AUTO_INCREMENT,
+  Patient_ID INT NOT NULL,
+  Doctor_ID INT NOT NULL,
+  Diagnosis TEXT NOT NULL,
+  Treatment TEXT NOT NULL,
+  Notes TEXT,
+  Treatment_Cost DECIMAL(10,2) NOT NULL,
+  App_ID INT NOT NULL,
+  Rating INT NULL,
+  PRIMARY KEY ( Record_ID )
+);
+
+CREATE TABLE IF NOT EXISTS Status (
+  Status_ID INT NOT NULL AUTO_INCREMENT,
+  Description VARCHAR(50) NOT NULL,
+  PRIMARY KEY ( Status_ID )
+);
+
+CREATE TABLE IF NOT EXISTS Log (
+  Log_ID INT NOT NULL AUTO_INCREMENT,
+  Hospital_ID INT NOT NULL,
+  Table_Name VARCHAR(50) NOT NULL,
+  Action ENUM('INSERT', 'UPDATE', 'DELETE') NOT NULL,
+  Details TEXT NOT NULL,
+  Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY ( Log_ID )
+);
